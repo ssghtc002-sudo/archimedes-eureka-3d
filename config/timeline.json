@@ -45,10 +45,10 @@
   },
   "worldContract": {
     "floorY": 0.0,
-    "archimedesPos": [-0.38, 0.0, 0.12],
-    "kingPos": [0.42, 0.0, 0.12],
-    "bathtubPos": [0.02, 0.0, 0.14],
-    "tablePos": [0.02, 0.0, 0.14],
+    "archimedesPos": [-0.60, 0.0, 0.02],
+    "kingPos": [0.60, 0.0, 0.02],
+    "bathtubPos": [-0.14, 0.0, 0.18],
+    "tablePos": [0.0, 0.0, 0.22],
     "slatePos": [0.0, 1.98, -1.12]
   },
   "beats": [

@@ -567,9 +567,9 @@ export function buildPixarHumanoid(opts = {}, registry = new MaterialRegistry())
     eyeR.brow.rotation.z = eyeR.brow.userData.baseRotZ;
     eyeL.brow.position.y = eyeL.brow.userData.baseY;
     eyeR.brow.position.y = eyeR.brow.userData.baseY;
-    armL.shoulder.rotation.set(0, 0, 0.14);
+    armL.shoulder.rotation.set(0, 0, -0.18);
     armL.elbow.rotation.set(-0.22, 0, 0);
-    armR.shoulder.rotation.set(0, 0, -0.14);
+    armR.shoulder.rotation.set(0, 0, 0.18);
     armR.elbow.rotation.set(-0.22, 0, 0);
     legL.hip.rotation.set(0, 0, 0);
     legL.knee.rotation.set(0, 0, 0);

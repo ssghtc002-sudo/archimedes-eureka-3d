@@ -232,6 +232,107 @@ for (const t of timestamps) {
       errors.push(`t=${t.toFixed(2)}s Archimedes & King horizontal overlap |ndcX_a - ndcX_b|=${Math.abs(ndcA.x - ndcK.x).toFixed(3)} < 0.16`);
     }
   }
+
+  // 3D Prop, Limb & Bathtub Interior Collision Gate
+  const checkBoxOverlap = (label, b1, b2, thresh = 0.002) => {
+    const inter = b1.clone().intersect(b2);
+    if (!inter.isEmpty()) {
+      const sz = new THREE.Vector3();
+      inter.getSize(sz);
+      const minDim = Math.min(sz.x, sz.y, sz.z);
+      if (minDim > thresh) {
+        errors.push(`t=${t.toFixed(2)}s 3D overlap [${label}] minDepth=${minDim.toFixed(4)}m`);
+      }
+    }
+  };
+
+  const pedGroup = scene.getObjectByName('hydro_pedestal_assembly');
+  const tubGroup = scene.getObjectByName('eureka_bathtub_assembly');
+  const aArmRBox = new THREE.Box3().setFromObject(stage.archimedes.armR.hand);
+  const kArmLBox = new THREE.Box3().setFromObject(stage.king.armL.hand);
+  const aLegLBox = new THREE.Box3().setFromObject(stage.archimedes.legL.shoe);
+  const aLegRBox = new THREE.Box3().setFromObject(stage.archimedes.legR.shoe);
+  const kLegLBox = new THREE.Box3().setFromObject(stage.king.legL.shoe);
+
+  checkBoxOverlap('arch_armR_vs_king_armL', aArmRBox, kArmLBox, 0.002);
+
+  if (pedGroup?.visible) {
+    const [pedMesh, crownMesh, goldBarMesh, twinTanksGroup, balanceGroup, shipTankGroup, crownCushion] = pedGroup.children;
+    const pedBox = new THREE.Box3().setFromObject(pedMesh);
+    checkBoxOverlap('arch_legR_vs_pedestal', aLegRBox, pedBox, 0.002);
+    checkBoxOverlap('king_legL_vs_pedestal', kLegLBox, pedBox, 0.002);
+    checkBoxOverlap('arch_armR_vs_pedestal', aArmRBox, pedBox, 0.002);
+    checkBoxOverlap('king_armL_vs_pedestal', kArmLBox, pedBox, 0.002);
+
+    const caliper = stage.archimedes.armR.propMount?.children?.[0];
+    if (caliper?.visible && crownMesh?.visible) {
+      checkBoxOverlap('caliper_vs_crown', new THREE.Box3().setFromObject(caliper), new THREE.Box3().setFromObject(crownMesh), 0.002);
+    }
+    if (crownMesh?.visible) {
+      const cBox = new THREE.Box3().setFromObject(crownMesh);
+      checkBoxOverlap('arch_armR_vs_crown', aArmRBox, cBox, 0.002);
+      checkBoxOverlap('king_armL_vs_crown', kArmLBox, cBox, 0.002);
+    }
+    if (goldBarMesh?.visible) {
+      const gBox = new THREE.Box3().setFromObject(goldBarMesh);
+      checkBoxOverlap('arch_armR_vs_goldBar', aArmRBox, gBox, 0.002);
+      checkBoxOverlap('king_armL_vs_goldBar', kArmLBox, gBox, 0.002);
+    }
+    if (twinTanksGroup?.visible) {
+      const wp = new THREE.Vector3();
+      twinTanksGroup.getWorldPosition(wp);
+      const leftT = new THREE.Box3(
+        new THREE.Vector3(wp.x - 0.317, wp.y, wp.z - 0.122),
+        new THREE.Vector3(wp.x - 0.033, wp.y + 0.38, wp.z + 0.162)
+      );
+      const rightT = new THREE.Box3(
+        new THREE.Vector3(wp.x + 0.033, wp.y, wp.z - 0.122),
+        new THREE.Vector3(wp.x + 0.317, wp.y + 0.38, wp.z + 0.162)
+      );
+      checkBoxOverlap('arch_armR_vs_leftTank', aArmRBox, leftT, 0.002);
+      checkBoxOverlap('king_armL_vs_rightTank', kArmLBox, rightT, 0.002);
+    }
+    if (balanceGroup?.visible) {
+      const [bStand, bBeam, leftPan, rightPan] = balanceGroup.children;
+      const lPanBox = new THREE.Box3().setFromObject(leftPan);
+      const rPanBox = new THREE.Box3().setFromObject(rightPan);
+      checkBoxOverlap('arch_armR_vs_leftPan', aArmRBox, lPanBox, 0.002);
+      checkBoxOverlap('king_armL_vs_rightPan', kArmLBox, rPanBox, 0.002);
+      if (shipTankGroup?.visible) {
+        const sGlassBox = new THREE.Box3().setFromObject(shipTankGroup.children[0]);
+        const sMeshBox = new THREE.Box3().setFromObject(shipTankGroup.children[2]);
+        checkBoxOverlap('shipGlass_vs_balanceStand', sGlassBox, new THREE.Box3().setFromObject(bStand), 0.002);
+        checkBoxOverlap('shipMesh_vs_balanceBeam', sMeshBox, new THREE.Box3().setFromObject(bBeam), 0.002);
+        checkBoxOverlap('shipGlass_vs_leftPan', sGlassBox, lPanBox, 0.002);
+        checkBoxOverlap('shipGlass_vs_rightPan', sGlassBox, rPanBox, 0.002);
+      }
+    }
+    if (shipTankGroup?.visible && crownCushion?.visible) {
+      checkBoxOverlap('shipGlass_vs_crownCushion', new THREE.Box3().setFromObject(shipTankGroup.children[0]), new THREE.Box3().setFromObject(crownCushion), 0.002);
+    }
+  }
+
+  if (tubGroup?.visible) {
+    const beakerBox = new THREE.Box3().setFromObject(tubGroup.children[3]);
+    checkBoxOverlap('king_legL_vs_beaker', kLegLBox, beakerBox, 0.002);
+    checkBoxOverlap('king_armL_vs_beaker', kArmLBox, beakerBox, 0.002);
+    if (t >= 10.35 && t <= 15.2) {
+      const tubPos = tubGroup.position;
+      for (const [label, box] of [['archLegL', aLegLBox], ['archLegR', aLegRBox]]) {
+        for (const px of [box.min.x, box.max.x]) {
+          for (const pz of [box.min.z, box.max.z]) {
+            const rad = Math.hypot((px - tubPos.x) / (0.31 * 1.22), (pz - tubPos.z) / 0.31);
+            if (rad > 0.96) {
+              errors.push(`t=${t.toFixed(2)}s ${label} pierces bathtub interior wall (rad=${rad.toFixed(3)})`);
+            }
+          }
+        }
+        if (box.min.y < 0.065) {
+          errors.push(`t=${t.toFixed(2)}s ${label} pierces bathtub floor (minY=${box.min.y.toFixed(3)})`);
+        }
+      }
+    }
+  }
 }
 
 if (peakMetrics.draws > BUDGETS.maxDraws) errors.push(`Draw budget exceeded: ${peakMetrics.draws} > ${BUDGETS.maxDraws}`);
@@ -245,4 +346,4 @@ if (errors.length > 0) {
   for (const e of errors) console.error('  ERR:', e);
   process.exit(1);
 }
-console.log('[VerifyScene] ALL 30 TIMESTAMPS PASSED BUDGET, GROUNDING, & SAFE-FRAME GATES!');
+console.log('[VerifyScene] ALL 30 TIMESTAMPS PASSED BUDGET, GROUNDING, COLLISION & SAFE-FRAME GATES!');

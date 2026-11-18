@@ -371,20 +371,20 @@ function createSlateTextures() {
     ctx.textBaseline = 'middle';
     ctx.fillText(spec.badge, 512, 68);
 
-    // Beat-specific chalk doodles on left/right upper margins
+    // Beat-specific chalk doodles on margins (kept clear of main title text)
     ctx.save();
-    ctx.strokeStyle = 'rgba(226, 244, 255, 0.28)';
+    ctx.strokeStyle = 'rgba(226, 244, 255, 0.26)';
     ctx.lineWidth = 3;
     if (idx === 0) {
-      // Crown outline on left, Gold bar outline on right
+      // Crown outline neatly tucked in lower-left margin below divider
       ctx.beginPath();
-      ctx.moveTo(90, 210);
-      ctx.lineTo(100, 155);
-      ctx.lineTo(125, 185);
-      ctx.lineTo(150, 145);
-      ctx.lineTo(175, 185);
-      ctx.lineTo(200, 155);
-      ctx.lineTo(210, 210);
+      ctx.moveTo(110, 420);
+      ctx.lineTo(118, 378);
+      ctx.lineTo(138, 400);
+      ctx.lineTo(158, 370);
+      ctx.lineTo(178, 400);
+      ctx.lineTo(198, 378);
+      ctx.lineTo(206, 420);
       ctx.closePath();
       ctx.stroke();
     } else if (idx === 1) {
@@ -770,10 +770,11 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
   const matReg = registry || new MaterialRegistry();
   const wc = timeline?.worldContract || {};
   const floorY = wc.floorY ?? 0.0;
-  const archimedesBasePos = new THREE.Vector3(...(wc.archimedesPos || [-0.38, 0.0, 0.12]));
-  const kingBasePos = new THREE.Vector3(...(wc.kingPos || [0.42, 0.0, 0.12]));
-  const centerStagePos = new THREE.Vector3(...(wc.tablePos || [0.02, 0.0, 0.14]));
-  const slatePos = new THREE.Vector3(...(wc.slatePos || [0.0, 1.42, -1.12]));
+  const archimedesBasePos = new THREE.Vector3(...(wc.archimedesPos || [-0.60, 0.0, 0.02]));
+  const kingBasePos = new THREE.Vector3(...(wc.kingPos || [0.60, 0.0, 0.02]));
+  const centerStagePos = new THREE.Vector3(...(wc.tablePos || [0.0, 0.0, 0.22]));
+  const bathtubBasePos = new THREE.Vector3(...(wc.bathtubPos || [-0.14, 0.0, 0.18]));
+  const slatePos = new THREE.Vector3(...(wc.slatePos || [0.0, 1.98, -1.12]));
 
   const rootGroup = new THREE.Group();
   rootGroup.name = 'archimedes_syracuse_stage';
@@ -877,52 +878,53 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
   rootGroup.add(floorMesh);
 
   const wallMesh = new THREE.Mesh(new THREE.PlaneGeometry(16.0, 7.2), wallMat);
-  wallMesh.position.set(0, floorY + 3.6, -1.48);
+  wallMesh.position.set(0, floorY + 3.6, -1.62);
   wallMesh.receiveShadow = true;
   wallMesh.name = 'syracuse_backdrop_wall';
   rootGroup.add(wallMesh);
 
-  // Merged Greek Doric Columns + Capitals + Architrave + Low Plinth Wall (1 draw)
+  // Merged Greek Doric Columns + Capitals + Architrave + Low Plinth Wall (positioned cleanly behind slate z=-1.36)
   const marbleEnvParts = [];
   const colPositions = [-1.42, -0.88, 0.88, 1.42];
+  const colZ = -1.36;
   for (const cx of colPositions) {
     const basePlinth = new THREE.BoxGeometry(0.30, 0.14, 0.30);
-    basePlinth.translate(cx, 0.07, -1.24);
+    basePlinth.translate(cx, 0.07, colZ);
     marbleEnvParts.push(basePlinth);
 
     const torusBase = new THREE.CylinderGeometry(0.125, 0.138, 0.08, 14);
-    torusBase.translate(cx, 0.18, -1.24);
+    torusBase.translate(cx, 0.18, colZ);
     marbleEnvParts.push(torusBase);
 
     const shaft = new THREE.CylinderGeometry(0.102, 0.118, 2.12, 14);
-    shaft.translate(cx, 1.28, -1.24);
+    shaft.translate(cx, 1.28, colZ);
     marbleEnvParts.push(shaft);
 
     const echinus = new THREE.CylinderGeometry(0.148, 0.104, 0.09, 14);
-    echinus.translate(cx, 2.38, -1.24);
+    echinus.translate(cx, 2.38, colZ);
     marbleEnvParts.push(echinus);
 
     const abacus = new THREE.BoxGeometry(0.32, 0.08, 0.32);
-    abacus.translate(cx, 2.46, -1.24);
+    abacus.translate(cx, 2.46, colZ);
     marbleEnvParts.push(abacus);
   }
 
   // Overhead Greek Architrave & Cornice Beam
   const architrave = new THREE.BoxGeometry(3.60, 0.18, 0.36);
-  architrave.translate(0, 2.59, -1.22);
+  architrave.translate(0, 2.59, -1.34);
   marbleEnvParts.push(architrave);
 
   const cornice = new THREE.BoxGeometry(3.76, 0.08, 0.42);
-  cornice.translate(0, 2.72, -1.20);
+  cornice.translate(0, 2.72, -1.32);
   marbleEnvParts.push(cornice);
 
   // Back dado stone Wainscot
   const dadoWall = new THREE.BoxGeometry(12.0, 0.52, 0.08);
-  dadoWall.translate(0, 0.26, -1.42);
+  dadoWall.translate(0, 0.26, -1.56);
   marbleEnvParts.push(dadoWall);
 
   const dadoCap = new THREE.BoxGeometry(12.0, 0.06, 0.12);
-  dadoCap.translate(0, 0.55, -1.40);
+  dadoCap.translate(0, 0.55, -1.54);
   marbleEnvParts.push(dadoCap);
 
   const colonnadeMesh = new THREE.Mesh(safeMerge(marbleEnvParts), marbleMat);
@@ -931,7 +933,7 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
   rootGroup.add(colonnadeMesh);
 
   // =========================================================================
-  // 3. SYRACUSE EQUATION SLATE AT [0.0, 1.42, -1.12] (2 draws: bronze frame + face)
+  // 3. SYRACUSE EQUATION SLATE AT [0.0, 1.98, -1.12] (2 draws: bronze frame + face)
   // =========================================================================
   const slateGroup = new THREE.Group();
   slateGroup.name = 'syracuse_slate_group';
@@ -963,6 +965,13 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
   const ledge = new THREE.BoxGeometry(slateW + 0.10, 0.03, 0.10);
   ledge.translate(0, -slateH * 0.5 - frameT + 0.015, 0.045);
   bronzeEnvParts.push(ledge);
+
+  // Rear mounting struts attaching slate cleanly onto inner columns (z = -1.12 -> -1.30)
+  for (const bx of [-0.88, 0.88]) {
+    const strut = new THREE.BoxGeometry(0.08, 0.08, 0.16);
+    strut.translate(bx, 0, -0.09);
+    bronzeEnvParts.push(strut);
+  }
 
   const slateFrameMesh = new THREE.Mesh(safeMerge(bronzeEnvParts), bronzeMat);
   slateFrameMesh.name = 'slate_bronze_frame';
@@ -1069,44 +1078,45 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
   // =========================================================================
   const bathtubGroup = new THREE.Group();
   bathtubGroup.name = 'eureka_bathtub_assembly';
-  bathtubGroup.position.copy(centerStagePos);
+  bathtubGroup.position.copy(bathtubBasePos);
   rootGroup.add(bathtubGroup);
 
-  // 5a. Marble tub basin + bronze rim, lion claws & overflow spout (2 draws)
-  const tubMarbleParts = [];
-  const tubOuter = new THREE.CylinderGeometry(0.32, 0.27, 0.46, 20, 1, true);
-  tubOuter.scale(1.22, 1.0, 0.85);
-  tubOuter.translate(-0.04, 0.25, 0);
-  tubMarbleParts.push(tubOuter);
-
-  const tubBottom = new THREE.CylinderGeometry(0.26, 0.26, 0.05, 18);
-  tubBottom.scale(1.22, 1.0, 0.85);
-  tubBottom.translate(-0.04, 0.035, 0);
-  tubMarbleParts.push(tubBottom);
-
-  const tubBasinMesh = new THREE.Mesh(safeMerge(tubMarbleParts), marbleMat);
+  // 5a. Solid thick-walled marble tub basin via LatheGeometry + bronze rim, claws & spout (2 draws)
+  const tubProfile = [
+    new THREE.Vector2(0.001, 0.03),
+    new THREE.Vector2(0.285, 0.03),
+    new THREE.Vector2(0.355, 0.50),
+    new THREE.Vector2(0.362, 0.52),
+    new THREE.Vector2(0.335, 0.525),
+    new THREE.Vector2(0.320, 0.50),
+    new THREE.Vector2(0.255, 0.075),
+    new THREE.Vector2(0.001, 0.075),
+  ];
+  const tubLathe = new THREE.LatheGeometry(tubProfile, 24);
+  tubLathe.scale(1.22, 1.0, 1.00);
+  const tubBasinMesh = new THREE.Mesh(tubLathe, marbleMat);
   tubBasinMesh.castShadow = true;
   tubBasinMesh.receiveShadow = true;
   bathtubGroup.add(tubBasinMesh);
 
   const tubBronzeParts = [];
-  const tubRim = new THREE.TorusGeometry(0.32, 0.026, 8, 22);
+  const tubRim = new THREE.TorusGeometry(0.348, 0.022, 8, 24);
   tubRim.rotateX(Math.PI * 0.5);
-  tubRim.scale(1.22, 0.85, 1.0);
-  tubRim.translate(-0.04, 0.48, 0);
+  tubRim.scale(1.22, 1.00, 1.0);
+  tubRim.translate(0, 0.52, 0);
   tubBronzeParts.push(tubRim);
 
-  const tubMidBand = new THREE.TorusGeometry(0.295, 0.012, 6, 20);
+  const tubMidBand = new THREE.TorusGeometry(0.318, 0.012, 6, 22);
   tubMidBand.rotateX(Math.PI * 0.5);
-  tubMidBand.scale(1.22, 0.85, 1.0);
-  tubMidBand.translate(-0.04, 0.26, 0);
+  tubMidBand.scale(1.22, 1.00, 1.0);
+  tubMidBand.translate(0, 0.28, 0);
   tubBronzeParts.push(tubMidBand);
 
   for (const [fx, fz] of [
-    [-0.28, 0.18],
-    [0.20, 0.18],
-    [-0.28, -0.18],
-    [0.20, -0.18],
+    [-0.31, 0.21],
+    [0.31, 0.21],
+    [-0.31, -0.21],
+    [0.31, -0.21],
   ]) {
     const claw = new THREE.SphereGeometry(0.038, 8, 6);
     claw.scale(1.1, 0.8, 1.3);
@@ -1114,45 +1124,47 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
     tubBronzeParts.push(claw);
   }
 
-  // Overflow spout on right side (+X) pointing toward the glass beaker
-  const spout = new THREE.CylinderGeometry(0.022, 0.026, 0.12, 10);
-  spout.rotateZ(Math.PI * 0.42);
-  spout.translate(0.36, 0.43, 0);
+  // Overflow spout on right side (+X) pointing cleanly toward the glass beaker (x = 0.52)
+  const spout = new THREE.CylinderGeometry(0.020, 0.024, 0.11, 10);
+  spout.rotateZ(Math.PI * 0.44);
+  spout.translate(0.45, 0.45, 0);
   tubBronzeParts.push(spout);
 
   const tubBronzeMesh = new THREE.Mesh(safeMerge(tubBronzeParts), bronzeMat);
   bathtubGroup.add(tubBronzeMesh);
 
-  // 5b. Rising turquoise bath water disc
-  const tubWaterGeo = new THREE.CylinderGeometry(0.305, 0.28, 0.06, 20);
-  tubWaterGeo.scale(1.20, 1.0, 0.83);
+  // 5b. Rising turquoise bath water disc strictly inside the tub inner wall
+  const tubWaterGeo = new THREE.CylinderGeometry(0.312, 0.292, 0.055, 22);
+  tubWaterGeo.scale(1.20, 1.0, 0.98);
   const tubWaterMesh = new THREE.Mesh(tubWaterGeo, waterMat);
-  tubWaterMesh.position.set(-0.04, 0.36, 0);
+  tubWaterMesh.position.set(0, 0.36, 0);
   bathtubGroup.add(tubWaterMesh);
 
   // 5c. Side Glass Beaker + Overflowing Water Stream + Rising Beaker Water
-  const beakerGlassGeo = new THREE.CylinderGeometry(0.082, 0.076, 0.28, 14, 1, true);
-  beakerGlassGeo.translate(0.42, 0.15, 0.04);
-  const beakerGlassMesh = new THREE.Mesh(beakerGlassGeo, glassMat);
+  const beakerWallGeo = new THREE.CylinderGeometry(0.076, 0.072, 0.28, 16, 1, true);
+  beakerWallGeo.translate(0.52, 0.145, 0);
+  const beakerBaseGeo = new THREE.CylinderGeometry(0.072, 0.072, 0.012, 16);
+  beakerBaseGeo.translate(0.52, 0.006, 0);
+  const beakerGlassMesh = new THREE.Mesh(safeMerge([beakerWallGeo, beakerBaseGeo]), glassMat);
   bathtubGroup.add(beakerGlassMesh);
 
-  const beakerWaterMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.074, 0.070, 0.22, 14), waterMat);
-  beakerWaterMesh.position.set(0.42, 0.04, 0.04);
+  const beakerWaterMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.068, 0.066, 0.22, 14), waterMat);
+  beakerWaterMesh.position.set(0.52, 0.02, 0);
   bathtubGroup.add(beakerWaterMesh);
 
-  const overflowStreamMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.022, 0.28, 8), waterMat);
-  overflowStreamMesh.position.set(0.40, 0.28, 0.02);
-  overflowStreamMesh.rotation.z = -0.18;
+  const overflowStreamMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.013, 0.017, 0.31, 8), waterMat);
+  overflowStreamMesh.position.set(0.505, 0.29, 0);
+  overflowStreamMesh.rotation.z = -0.10;
   bathtubGroup.add(overflowStreamMesh);
 
   // 5d. Bobbing Golden Rubber Ducky (1 vertex-colored mesh)
-  const duckBody = new THREE.SphereGeometry(0.044, 10, 8);
+  const duckBody = new THREE.SphereGeometry(0.042, 10, 8);
   duckBody.scale(1.25, 0.88, 0.95);
-  const duckHead = new THREE.SphereGeometry(0.030, 10, 8);
-  duckHead.translate(0.032, 0.036, 0);
-  const duckBill = new THREE.ConeGeometry(0.014, 0.032, 6);
+  const duckHead = new THREE.SphereGeometry(0.028, 10, 8);
+  duckHead.translate(0.030, 0.034, 0);
+  const duckBill = new THREE.ConeGeometry(0.013, 0.030, 6);
   duckBill.rotateZ(-Math.PI * 0.5);
-  duckBill.translate(0.064, 0.034, 0);
+  duckBill.translate(0.060, 0.032, 0);
   const duckyMesh = new THREE.Mesh(
     mergeWithVertexColors([
       { geo: duckBody, color: '#FACC15' },
@@ -1161,26 +1173,26 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
     ]),
     multiMat
   );
-  duckyMesh.position.set(0.14, 0.44, 0.12);
+  duckyMesh.position.set(0.21, 0.44, 0.16);
   bathtubGroup.add(duckyMesh);
 
-  // 5e. Upward Cyan Buoyancy Arrows (1 merged mesh)
+  // 5e. Upward Cyan Buoyancy Arrows flanking Archimedes inside water (1 merged mesh)
   const arrowParts = [];
-  for (const ax of [-0.22, 0.12]) {
-    const stem = new THREE.CylinderGeometry(0.012, 0.012, 0.18, 8);
-    stem.translate(ax, 0.09, 0.22);
+  for (const ax of [-0.26, 0.26]) {
+    const stem = new THREE.CylinderGeometry(0.011, 0.011, 0.16, 8);
+    stem.translate(ax, 0.08, 0.04);
     arrowParts.push(stem);
-    const head = new THREE.ConeGeometry(0.032, 0.07, 8);
-    head.translate(ax, 0.21, 0.22);
+    const head = new THREE.ConeGeometry(0.028, 0.065, 8);
+    head.translate(ax, 0.19, 0.04);
     arrowParts.push(head);
   }
   const tubBuoyancyArrows = new THREE.Mesh(safeMerge(arrowParts), cyanGlowMat);
-  tubBuoyancyArrows.position.set(0, 0.36, 0);
+  tubBuoyancyArrows.position.set(0, 0.42, 0);
   bathtubGroup.add(tubBuoyancyArrows);
 
   // 5f. InstancedMesh of 24 Splash Water Droplets (frustumCulled = false)
   const DROPLET_COUNT = 24;
-  const dropletGeo = new THREE.SphereGeometry(0.022, 7, 6);
+  const dropletGeo = new THREE.SphereGeometry(0.020, 7, 6);
   const splashInstanced = new THREE.InstancedMesh(dropletGeo, waterMat, DROPLET_COUNT);
   splashInstanced.frustumCulled = false;
   bathtubGroup.add(splashInstanced);
@@ -1194,16 +1206,16 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
   rootGroup.add(pedestalGroup);
 
   const pedParts = [];
-  const pedBase = new THREE.BoxGeometry(0.68, 0.08, 0.46);
+  const pedBase = new THREE.BoxGeometry(0.56, 0.08, 0.40);
   pedBase.translate(0, 0.04, 0);
   pedParts.push(pedBase);
 
-  const pedCol = new THREE.CylinderGeometry(0.18, 0.21, 0.56, 16);
-  pedCol.scale(1.35, 1.0, 0.92);
+  const pedCol = new THREE.CylinderGeometry(0.16, 0.19, 0.56, 16);
+  pedCol.scale(1.25, 1.0, 0.88);
   pedCol.translate(0, 0.36, 0);
   pedParts.push(pedCol);
 
-  const pedTop = new THREE.BoxGeometry(0.74, 0.08, 0.50);
+  const pedTop = new THREE.BoxGeometry(0.70, 0.08, 0.44);
   pedTop.translate(0, 0.68, 0);
   pedParts.push(pedTop);
 
@@ -1215,83 +1227,133 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
   const tableTopY = 0.72;
 
   // 6a. Spiky Royal Gold Crown + Pure Gold Ingot Bar + Silver Core (3 draws)
-  const crownMesh = new THREE.Mesh(buildSpikyGoldCrownGeometry(1.0), goldMat);
+  const crownMesh = new THREE.Mesh(buildSpikyGoldCrownGeometry(0.84), goldMat);
   crownMesh.castShadow = true;
-  crownMesh.position.set(-0.14, tableTopY + 0.01, 0.02);
+  crownMesh.position.set(-0.14, tableTopY, 0.02);
   pedestalGroup.add(crownMesh);
 
-  // Inner sneaky silver core inside the crown (exposed in Beat 5!)
-  const silverCoreMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.078, 0.072, 0.085, 12), silverMat);
-  silverCoreMesh.position.set(0, 0.048, 0);
+  // Inner sneaky silver core tucked neatly inside the crown band (exposed in Beat 5!)
+  const silverCoreMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.056, 0.052, 0.048, 12), silverMat);
+  silverCoreMesh.position.set(0, 0.042, 0);
   silverCoreMesh.visible = false;
   crownMesh.add(silverCoreMesh);
 
-  const goldBarGeo = new THREE.BoxGeometry(0.17, 0.068, 0.095);
+  const goldBarGeo = new THREE.BoxGeometry(0.15, 0.062, 0.088);
   const goldBarMesh = new THREE.Mesh(goldBarGeo, goldMat);
   goldBarMesh.castShadow = true;
-  goldBarMesh.position.set(0.15, tableTopY + 0.036, 0.02);
+  goldBarMesh.position.set(0.14, tableTopY + 0.031, 0.02);
   pedestalGroup.add(goldBarMesh);
 
-  // 6b. Beat 4: Twin Glass Water Displacement Tanks + Rising Water Levels (2 draws)
+  // 6b. Beat 4: Twin Glass Water Displacement Tanks + Rising Water Levels (3 draws)
   const twinTanksGroup = new THREE.Group();
   twinTanksGroup.position.set(0, tableTopY, 0);
   twinTanksGroup.visible = false;
   pedestalGroup.add(twinTanksGroup);
 
   const tankGlassParts = [];
-  for (const tx of [-0.15, 0.15]) {
-    const cyl = new THREE.CylinderGeometry(0.125, 0.125, 0.36, 16, 1, true);
-    cyl.translate(tx, 0.18, 0.02);
+  for (const tx of [-0.175, 0.175]) {
+    const cyl = new THREE.CylinderGeometry(0.142, 0.142, 0.38, 18, 1, true);
+    cyl.translate(tx, 0.19, 0.02);
     tankGlassParts.push(cyl);
+    const disc = new THREE.CylinderGeometry(0.142, 0.142, 0.012, 18);
+    disc.translate(tx, 0.006, 0.02);
+    tankGlassParts.push(disc);
   }
   const twinTankGlassMesh = new THREE.Mesh(safeMerge(tankGlassParts), glassMat);
   twinTanksGroup.add(twinTankGlassMesh);
 
-  const tankWaterLeft = new THREE.Mesh(new THREE.CylinderGeometry(0.116, 0.116, 0.20, 14), waterMat);
-  tankWaterLeft.position.set(-0.15, 0.10, 0.02);
+  const tankWaterLeft = new THREE.Mesh(new THREE.CylinderGeometry(0.133, 0.133, 0.20, 16), waterMat);
+  tankWaterLeft.position.set(-0.175, 0.112, 0.02);
   twinTanksGroup.add(tankWaterLeft);
 
-  const tankWaterRight = new THREE.Mesh(new THREE.CylinderGeometry(0.116, 0.116, 0.20, 14), waterMat);
-  tankWaterRight.position.set(0.15, 0.10, 0.02);
+  const tankWaterRight = new THREE.Mesh(new THREE.CylinderGeometry(0.133, 0.133, 0.20, 16), waterMat);
+  tankWaterRight.position.set(0.175, 0.112, 0.02);
   twinTanksGroup.add(tankWaterRight);
 
-  // 6c. Beat 5: Bronze Hydrostatic Balance Beam (2 draws: stand + tilting beam)
+  // 6c. Beat 5: Bronze Hydrostatic Balance Beam + Articulated Side-Stirrup Scale Pans
   const balanceGroup = new THREE.Group();
-  balanceGroup.position.set(0, tableTopY, -0.02);
+  balanceGroup.position.set(0, tableTopY, -0.07);
   balanceGroup.visible = false;
   pedestalGroup.add(balanceGroup);
 
   const standParts = [];
-  const pillar = new THREE.CylinderGeometry(0.022, 0.032, 0.52, 10);
-  pillar.translate(0, 0.26, 0);
+  const pillar = new THREE.CylinderGeometry(0.022, 0.032, 0.54, 10);
+  pillar.translate(0, 0.27, 0);
   standParts.push(pillar);
-  const standBase = new THREE.CylinderGeometry(0.09, 0.11, 0.035, 12);
-  standBase.translate(0, 0.018, 0);
+  const standBase = new THREE.CylinderGeometry(0.085, 0.105, 0.032, 12);
+  standBase.translate(0, 0.016, 0);
   standParts.push(standBase);
   const balanceStandMesh = new THREE.Mesh(safeMerge(standParts), bronzeMat);
   balanceGroup.add(balanceStandMesh);
 
-  const beamParts = [];
-  const crossbar = new THREE.CylinderGeometry(0.014, 0.014, 0.44, 10);
-  crossbar.rotateZ(Math.PI * 0.5);
-  beamParts.push(crossbar);
-  for (const bx of [-0.18, 0.18]) {
-    const cord = new THREE.CylinderGeometry(0.004, 0.004, 0.22, 6);
-    cord.translate(bx, -0.11, 0);
-    beamParts.push(cord);
-  }
-  const balanceBeamMesh = new THREE.Mesh(safeMerge(beamParts), bronzeMat);
-  balanceBeamMesh.position.set(0, 0.50, 0);
+  const crossbarGeo = new THREE.CylinderGeometry(0.013, 0.013, 0.44, 10);
+  crossbarGeo.rotateZ(Math.PI * 0.5);
+  const balanceBeamMesh = new THREE.Mesh(crossbarGeo, bronzeMat);
+  balanceBeamMesh.position.set(0, 0.52, 0);
   balanceGroup.add(balanceBeamMesh);
 
-  // 6d. Beat 5-6: Miniature Floating Greek Trireme Ship Hull (1 vertex-colored mesh)
-  const shipHull = new THREE.CylinderGeometry(0.065, 0.032, 0.28, 10);
+  function buildScalePanMesh() {
+    const parts = [];
+    // Flat round bronze dish at y = -0.25 below hook
+    const dish = new THREE.CylinderGeometry(0.114, 0.102, 0.014, 16);
+    dish.translate(0, -0.25, 0);
+    parts.push(dish);
+    // Outer side-stirrup wires (clear of the crown & gold bar in the center!)
+    for (const sx of [-1, 1]) {
+      const wire = new THREE.CylinderGeometry(0.004, 0.004, 0.272, 6);
+      wire.rotateZ(sx * 0.415);
+      wire.translate(sx * 0.056, -0.125, 0);
+      parts.push(wire);
+    }
+    const hook = new THREE.SphereGeometry(0.012, 6, 6);
+    parts.push(hook);
+    return new THREE.Mesh(safeMerge(parts), bronzeMat);
+  }
+  const leftPanMesh = buildScalePanMesh();
+  const rightPanMesh = buildScalePanMesh();
+  balanceGroup.add(leftPanMesh);
+  balanceGroup.add(rightPanMesh);
+
+  // 6d. Beat 5-6: Contained Glass Wave Basin + Miniature Floating Greek Trireme Ship
+  const shipTankGroup = new THREE.Group();
+  shipTankGroup.position.set(0, tableTopY, 0.13);
+  shipTankGroup.visible = false;
+  pedestalGroup.add(shipTankGroup);
+
+  const shipGlassParts = [];
+  const tankW = 0.36;
+  const tankH = 0.14;
+  const tankD = 0.22;
+  const wallT = 0.008;
+  const tankFloor = new THREE.BoxGeometry(tankW, wallT, tankD);
+  tankFloor.translate(0, wallT * 0.5, 0);
+  shipGlassParts.push(tankFloor);
+  const frontWall = new THREE.BoxGeometry(tankW, tankH, wallT);
+  frontWall.translate(0, tankH * 0.5, tankD * 0.5 - wallT * 0.5);
+  shipGlassParts.push(frontWall);
+  const backWall = new THREE.BoxGeometry(tankW, tankH, wallT);
+  backWall.translate(0, tankH * 0.5, -tankD * 0.5 + wallT * 0.5);
+  shipGlassParts.push(backWall);
+  const leftWall = new THREE.BoxGeometry(wallT, tankH, tankD - wallT * 2);
+  leftWall.translate(-tankW * 0.5 + wallT * 0.5, tankH * 0.5, 0);
+  shipGlassParts.push(leftWall);
+  const rightWall = new THREE.BoxGeometry(wallT, tankH, tankD - wallT * 2);
+  rightWall.translate(tankW * 0.5 - wallT * 0.5, tankH * 0.5, 0);
+  shipGlassParts.push(rightWall);
+  const shipTankGlassMesh = new THREE.Mesh(safeMerge(shipGlassParts), glassMat);
+  shipTankGroup.add(shipTankGlassMesh);
+
+  const shipTankWaterMesh = new THREE.Mesh(new THREE.BoxGeometry(tankW - 0.02, 0.095, tankD - 0.02), waterMat);
+  shipTankWaterMesh.position.set(0, 0.056, 0);
+  shipTankGroup.add(shipTankWaterMesh);
+
+  const shipHull = new THREE.CylinderGeometry(0.058, 0.028, 0.25, 10);
   shipHull.rotateZ(Math.PI * 0.5);
   shipHull.scale(1.0, 0.65, 0.72);
-  const shipMast = new THREE.CylinderGeometry(0.007, 0.009, 0.19, 6);
-  shipMast.translate(0, 0.10, 0);
-  const shipSail = new THREE.BoxGeometry(0.14, 0.11, 0.012);
-  shipSail.translate(0, 0.11, 0.015);
+  const shipMast = new THREE.CylinderGeometry(0.006, 0.008, 0.16, 6);
+  shipMast.translate(0, 0.085, 0);
+  const shipSail = new THREE.BoxGeometry(0.12, 0.095, 0.010);
+  shipSail.translate(0, 0.095, 0.014);
   const shipMesh = new THREE.Mesh(
     mergeWithVertexColors([
       { geo: shipHull, color: '#92400E' },
@@ -1300,13 +1362,18 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
     ]),
     multiMat
   );
-  shipMesh.position.set(0, tableTopY + 0.18, 0.12);
-  shipMesh.visible = false;
-  pedestalGroup.add(shipMesh);
+  shipMesh.position.set(0, 0.112, 0);
+  shipTankGroup.add(shipMesh);
+
+  // Beat 6 royal bronze display cushion for the pure crown
+  const crownCushionMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.105, 0.118, 0.036, 16), bronzeMat);
+  crownCushionMesh.position.set(-0.21, tableTopY + 0.018, 0.03);
+  crownCushionMesh.visible = false;
+  pedestalGroup.add(crownCushionMesh);
 
   // 6e. Beat 6: Celebratory Golden Sparks / Confetti InstancedMesh (frustumCulled = false)
   const CONFETTI_COUNT = 24;
-  const confettiGeo = new THREE.BoxGeometry(0.032, 0.032, 0.008);
+  const confettiGeo = new THREE.BoxGeometry(0.028, 0.028, 0.008);
   const confettiInstanced = new THREE.InstancedMesh(confettiGeo, goldMat, CONFETTI_COUNT);
   confettiInstanced.frustumCulled = false;
   confettiInstanced.visible = false;
@@ -1359,19 +1426,21 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
     king.resetPose();
 
     archimedes.root.position.copy(archimedesBasePos);
-    archimedes.root.rotation.set(0, 0.26, 0);
+    archimedes.root.rotation.set(0, 0.22, 0);
     archimedes.contactShadow.visible = beatIdx !== 2;
 
-    king.root.position.set(beatIdx === 2 ? 0.46 : kingBasePos.x, 0.0, beatIdx === 2 ? 0.10 : kingBasePos.z);
-    king.root.rotation.set(0, -0.28, 0);
+    king.root.position.set(beatIdx === 2 ? 0.64 : kingBasePos.x, 0.0, beatIdx === 2 ? 0.06 : kingBasePos.z);
+    king.root.rotation.set(0, beatIdx === 2 ? -0.26 : -0.22, 0);
     king.contactShadow.visible = true;
 
     handCaliperMesh.visible = false;
     silverCoreMesh.visible = false;
     twinTanksGroup.visible = false;
     balanceGroup.visible = false;
-    shipMesh.visible = false;
+    shipTankGroup.visible = false;
+    crownCushionMesh.visible = false;
     confettiInstanced.visible = false;
+    crownMesh.scale.setScalar(1.0);
 
     const breathe = Math.sin(time * 2.6) * 0.018;
     let archSmile = 0.25;
@@ -1382,36 +1451,36 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
       // BEAT 1 (0.0 .. 4.8s): King Hiero II presents suspect Crown & Gold Bar
       // =====================================================================
       bathtubGroup.visible = false;
-      bathtubGroup.position.set(centerStagePos.x, 0, -0.65);
+      bathtubGroup.position.set(bathtubBasePos.x, 0, -0.65);
       pedestalGroup.visible = true;
       pedestalGroup.position.copy(centerStagePos);
 
       crownMesh.visible = true;
       goldBarMesh.visible = true;
-      const gleamBump = time >= 1.80 && time <= 2.35 ? Math.sin(((time - 1.80) / 0.55) * Math.PI) * 0.06 : 0;
-      crownMesh.position.set(-0.14, tableTopY + 0.01 + gleamBump, 0.02);
+      const gleamBump = time >= 1.80 && time <= 2.35 ? Math.sin(((time - 1.80) / 0.55) * Math.PI) * 0.05 : 0;
+      crownMesh.position.set(-0.14, tableTopY + gleamBump, 0.02);
       crownMesh.rotation.set(0, time * 0.85, 0);
-      goldBarMesh.position.set(0.15, tableTopY + 0.036, 0.02);
+      goldBarMesh.position.set(0.14, tableTopY + 0.031, 0.02);
       goldBarMesh.rotation.set(0, -0.22, 0);
 
-      // King Hiero points imperiously at the crown, then wags warning finger
+      // King Hiero gestures warmly above/right of the gold bar; outer arm hangs outside robe
       king.chestGroup.rotation.x = 0.04 + breathe;
       king.headGroup.rotation.y = -0.18;
-      king.armL.shoulder.rotation.set(-0.92 + Math.sin(time * 4.5) * 0.12, -0.22, 0.28);
-      king.armL.elbow.rotation.set(-0.52, 0, 0);
-      king.armR.shoulder.rotation.set(0.18, 0, -0.26);
-      king.armR.elbow.rotation.set(-0.85, 0, 0);
+      king.armL.shoulder.rotation.set(-1.18 + Math.sin(time * 4.5) * 0.08, 0.28, -0.02);
+      king.armL.elbow.rotation.set(-0.92, 0, 0);
+      king.armR.shoulder.rotation.set(-0.12, 0, 0.26);
+      king.armR.elbow.rotation.set(-0.46, 0, 0);
       kingSmile = -0.15;
 
-      // Archimedes inspects crown thoughtfully, then recoils at "melt the crown = history!" (3.40s vine_boom)
+      // Archimedes inspects crown cleanly from left without overlapping spikes; recoils at 3.40s
       const boomShock = smoothstep(3.35, 3.55, time) * (1.0 - smoothstep(4.2, 4.75, time) * 0.5);
-      archimedes.chestGroup.rotation.x = 0.10 - 0.22 * boomShock + breathe;
+      archimedes.chestGroup.rotation.x = 0.08 - 0.18 * boomShock + breathe;
       archimedes.headGroup.rotation.y = 0.20;
-      archimedes.headGroup.rotation.x = 0.08 - 0.24 * boomShock;
-      archimedes.armR.shoulder.rotation.set(-0.78 - 0.35 * boomShock, 0.18, 0.25);
+      archimedes.headGroup.rotation.x = 0.06 - 0.22 * boomShock;
+      archimedes.armR.shoulder.rotation.set(-1.35 - 0.35 * boomShock, -0.24, -0.04 + 0.14 * boomShock);
       archimedes.armR.elbow.rotation.set(-0.88, 0, 0);
-      archimedes.armL.shoulder.rotation.set(-0.35 - 0.55 * boomShock, 0, -0.30);
-      archimedes.armL.elbow.rotation.set(-0.75, 0, 0);
+      archimedes.armL.shoulder.rotation.set(-0.14 - 0.55 * boomShock, 0, -0.26 - 0.14 * boomShock);
+      archimedes.armL.elbow.rotation.set(-0.48, 0, 0);
       archimedes.setHatPop(boomShock * 0.45);
       archSmile = boomShock > 0.2 ? -0.20 : 0.22;
     } else if (beatIdx === 1) {
@@ -1419,7 +1488,7 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
       // BEAT 2 (4.8 .. 9.8s): Caliper Struggle & Geometry Gives Up
       // =====================================================================
       bathtubGroup.visible = false;
-      bathtubGroup.position.set(centerStagePos.x, 0, -0.65);
+      bathtubGroup.position.set(bathtubBasePos.x, 0, -0.65);
       pedestalGroup.visible = true;
       pedestalGroup.position.copy(centerStagePos);
 
@@ -1429,29 +1498,29 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
 
       // Caliper boing at 5.60s makes the crown wobble!
       const boingDt = time - 5.60;
-      const wobble = boingDt >= 0 && boingDt < 1.2 ? Math.sin(boingDt * 24.0) * Math.exp(-boingDt * 3.5) * 0.28 : 0;
-      crownMesh.position.set(-0.12, tableTopY + 0.01 + Math.abs(wobble) * 0.08, 0.04);
-      crownMesh.rotation.set(wobble * 0.5, time * 0.5, wobble);
-      goldBarMesh.position.set(0.16, tableTopY + 0.036, 0.02);
+      const wobble = boingDt >= 0 && boingDt < 1.2 ? Math.sin(boingDt * 24.0) * Math.exp(-boingDt * 3.5) * 0.24 : 0;
+      crownMesh.position.set(-0.12, tableTopY + Math.abs(wobble) * 0.07, 0.03);
+      crownMesh.rotation.set(wobble * 0.45, time * 0.5, wobble);
+      goldBarMesh.position.set(0.15, tableTopY + 0.031, 0.02);
 
-      // Archimedes struggles with brass calipers then scratches his head in frustration
+      // Archimedes holds brass calipers safely above & left of crown while scratching temple
       const struggleOsc = Math.sin(time * 9.5);
-      archimedes.root.rotation.y = 0.34;
-      archimedes.chestGroup.rotation.x = 0.14 + breathe;
+      archimedes.root.rotation.y = 0.24;
+      archimedes.chestGroup.rotation.x = 0.08 + breathe;
       archimedes.headGroup.rotation.y = 0.16 + struggleOsc * 0.06;
-      archimedes.armR.shoulder.rotation.set(-1.02 + struggleOsc * 0.14, 0.24, 0.22);
-      archimedes.armR.elbow.rotation.set(-0.56, 0, 0);
-      archimedes.armL.shoulder.rotation.set(-1.18, 0.18, -0.36);
-      archimedes.armL.elbow.rotation.set(-1.12, 0, 0);
+      archimedes.armR.shoulder.rotation.set(-1.42 + struggleOsc * 0.07, -0.28, 0.02);
+      archimedes.armR.elbow.rotation.set(-0.82, 0, 0);
+      archimedes.armL.shoulder.rotation.set(-1.32, 0.12, -0.28);
+      archimedes.armL.elbow.rotation.set(-1.18, 0, 0);
       archSmile = -0.18;
 
-      // King Hiero crosses arms impatiently
+      // King Hiero crosses arms cleanly in front of chest (zero chest clipping)
       king.chestGroup.rotation.x = -0.04 + breathe;
       king.headGroup.rotation.y = -0.22;
-      king.armL.shoulder.rotation.set(-0.72, -0.48, 0.18);
-      king.armL.elbow.rotation.set(-1.22, 0, 0);
-      king.armR.shoulder.rotation.set(-0.72, 0.48, -0.18);
-      king.armR.elbow.rotation.set(-1.22, 0, 0);
+      king.armL.shoulder.rotation.set(-0.76, 0.72, -0.22);
+      king.armL.elbow.rotation.set(-1.12, 0, 0);
+      king.armR.shoulder.rotation.set(-0.86, -0.72, 0.22);
+      king.armR.elbow.rotation.set(-1.12, 0, 0);
       kingSmile = -0.12;
     } else if (beatIdx === 2) {
       // =====================================================================
@@ -1460,88 +1529,91 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
       pedestalGroup.visible = false;
       pedestalGroup.position.set(centerStagePos.x, 0, -0.65);
       bathtubGroup.visible = true;
-      bathtubGroup.position.copy(centerStagePos);
+      bathtubGroup.position.copy(bathtubBasePos);
 
-      // Archimedes hops into the center bronze bathtub (x = -0.08, y = -0.14, z = 0.14)
+      // Archimedes springs high first before arcing inward over the left rim into the basin
       const hopU = smoothstep(9.8, 10.32, time);
-      const hopArc = time < 10.35 ? Math.sin(hopU * Math.PI) * 0.24 : 0;
-      const splashBob = time >= 10.35 ? Math.sin((time - 10.35) * 6.5) * 0.016 : 0;
+      const hopX = smoothstep(9.92, 10.32, time);
+      const hopArc = time < 10.35 ? Math.sin(Math.pow(hopU, 0.72) * Math.PI) * 0.64 : 0;
+      const splashBob = time >= 10.35 ? Math.sin((time - 10.35) * 6.5) * 0.012 : 0;
 
       archimedes.root.position.set(
-        lerp(-0.24, -0.08, hopU),
-        lerp(0.0, -0.14, hopU) + hopArc + splashBob,
-        0.14
+        lerp(archimedesBasePos.x, bathtubBasePos.x, hopX),
+        lerp(0.0, -0.12, hopU) + hopArc + splashBob,
+        lerp(archimedesBasePos.z, 0.07, hopX)
       );
-      archimedes.root.rotation.set(0, 0.12, 0);
+      archimedes.root.rotation.set(0, lerp(0.22, 0.10, hopU), 0);
       archimedes.rig.position.set(0, 0, 0);
 
-      // Seated splashing pose inside the tub
-      archimedes.pelvis.rotation.x = -0.18;
-      archimedes.chestGroup.rotation.x = 0.12;
-      archimedes.legL.hip.rotation.x = -1.28 + Math.sin(time * 8.0) * 0.12;
-      archimedes.legL.knee.rotation.x = 0.45;
-      archimedes.legR.hip.rotation.x = -1.28 - Math.sin(time * 8.0) * 0.12;
-      archimedes.legR.knee.rotation.x = 0.45;
+      // Seated pose: thighs forward & knees bent DOWN inside tub basin (zero wall piercing!)
+      const legTuck = smoothstep(9.8, 10.22, time);
+      const legBounce = time >= 10.35 ? Math.sin(time * 8.0) * 0.05 : 0;
+      archimedes.pelvis.rotation.x = -0.10 * legTuck;
+      archimedes.chestGroup.rotation.x = 0.10 * legTuck;
+      archimedes.legL.hip.rotation.set(-1.52 * legTuck + legBounce, 0, -0.06 * legTuck);
+      archimedes.legL.knee.rotation.x = 1.62 * legTuck;
+      archimedes.legR.hip.rotation.set(-1.52 * legTuck - legBounce, 0, 0.06 * legTuck);
+      archimedes.legR.knee.rotation.x = 1.62 * legTuck;
 
-      // Joyful Eureka arms raised high!
-      const eurekaRaise = smoothstep(11.8, 12.6, time);
-      const wave = Math.sin(time * 8.5) * 0.16;
-      archimedes.armL.shoulder.rotation.set(lerp(-0.95, -2.15, eurekaRaise) + wave, 0.15, -0.48);
-      archimedes.armL.elbow.rotation.set(-0.35, 0, 0);
-      archimedes.armR.shoulder.rotation.set(lerp(-0.95, -2.15, eurekaRaise) - wave, -0.15, 0.48);
-      archimedes.armR.elbow.rotation.set(-0.35, 0, 0);
-      archimedes.eyeL.brow.position.y += 0.026; // wide Eureka eyes!
+      // Joyful Eureka arms raised above tub rim and clear of King Hiero!
+      const eurekaRaise = smoothstep(11.4, 12.4, time);
+      const wave = Math.sin(time * 8.5) * 0.10;
+      archimedes.armL.shoulder.rotation.set(lerp(-1.34, -2.26, eurekaRaise) + wave, 0.10, -0.34);
+      archimedes.armL.elbow.rotation.set(-0.38, 0, 0);
+      archimedes.armR.shoulder.rotation.set(lerp(-1.34, -2.26, eurekaRaise) - wave, -0.14, 0.28);
+      archimedes.armR.elbow.rotation.set(-0.42, 0, 0);
+      archimedes.eyeL.brow.position.y += 0.026;
       archimedes.setHatPop(eurekaRaise * 0.35);
       archSmile = 0.88;
 
       // Rising turquoise tub water + overflowing stream into side beaker
       const waterRise = smoothstep(10.15, 10.85, time);
-      tubWaterMesh.position.y = lerp(0.32, 0.44, waterRise) + Math.sin(time * 7.0) * 0.008;
+      tubWaterMesh.position.y = lerp(0.34, 0.45, waterRise) + Math.sin(time * 7.0) * 0.007;
       overflowStreamMesh.visible = time >= 10.30;
       const beakerFill = smoothstep(10.35, 12.4, time);
       beakerWaterMesh.scale.set(1, Math.max(0.1, beakerFill), 1);
-      beakerWaterMesh.position.set(0.42, 0.02 + beakerFill * 0.11, 0.04);
+      beakerWaterMesh.position.set(0.52, 0.015 + beakerFill * 0.11, 0);
 
       // Bobbing golden rubber ducky (pops at sfx_07 11.40s!)
       const duckDt = time - 11.40;
       const duckPop = duckDt >= 0 && duckDt < 0.7 ? Math.sin((duckDt / 0.7) * Math.PI) * 0.12 : 0;
-      duckyMesh.position.set(0.15, tubWaterMesh.position.y + 0.045 + duckPop, 0.14);
+      duckyMesh.position.set(0.21, tubWaterMesh.position.y + 0.038 + duckPop, 0.16);
       duckyMesh.rotation.set(Math.sin(time * 5.2) * 0.12, time * 1.8, Math.cos(time * 4.5) * 0.10);
 
-      // Glowing upward cyan buoyancy arrows
+      // Glowing upward cyan buoyancy arrows flanking Archimedes inside water
       tubBuoyancyArrows.visible = time >= 11.8;
-      tubBuoyancyArrows.position.y = 0.36 + Math.sin(time * 5.5) * 0.04;
+      tubBuoyancyArrows.position.y = 0.40 + Math.sin(time * 5.5) * 0.035;
 
-      // Update 24 splash water droplets
+      // Update 24 splash water droplets inside tub radius
       const splashAge = Math.max(0, time - 10.30);
       for (let i = 0; i < DROPLET_COUNT; i++) {
-        const cycle = (splashAge * 1.6 + i * 0.13) % 1.2;
+        const cycle = (splashAge * 1.6 + i * 0.13) % 1.1;
         const angle = (i / DROPLET_COUNT) * Math.PI * 2 + i * 0.7;
-        const rad = 0.10 + cycle * 0.28;
-        const dy = 0.42 + cycle * 0.46 - 0.55 * cycle * cycle;
-        dummy.position.set(-0.04 + Math.cos(angle) * rad, Math.max(0.12, dy), Math.sin(angle) * rad * 0.75);
-        const s = time >= 10.25 ? Math.max(0.2, 1.1 - cycle * 0.7) : 0.001;
+        const rad = 0.11 + cycle * 0.22;
+        const dy = 0.44 + cycle * 0.42 - 0.55 * cycle * cycle;
+        dummy.position.set(Math.cos(angle) * rad, Math.max(0.20, dy), Math.sin(angle) * rad * 0.85);
+        const s = time >= 10.25 ? Math.max(0.2, 1.05 - cycle * 0.65) : 0.001;
         dummy.scale.setScalar(s);
         dummy.updateMatrix();
         splashInstanced.setMatrixAt(i, dummy.matrix);
       }
       splashInstanced.instanceMatrix.needsUpdate = true;
 
-      // King Hiero reacts in shocked royal amazement on the right (feet strictly grounded at y = 0.0!)
-      king.chestGroup.rotation.x = -0.08 + breathe;
+      // King Hiero stands clear on the right (x = 0.64), reacting in amazement
+      king.chestGroup.rotation.x = -0.06 + breathe;
       king.headGroup.rotation.y = -0.26;
       king.eyeL.brow.position.y += 0.024;
-      king.armL.shoulder.rotation.set(-1.15, -0.15, 0.45);
-      king.armL.elbow.rotation.set(-0.65, 0, 0);
-      king.armR.shoulder.rotation.set(-0.85, 0.15, -0.38);
-      king.armR.elbow.rotation.set(-0.75, 0, 0);
+      king.armL.shoulder.rotation.set(-1.18, 0.30, -0.10);
+      king.armL.elbow.rotation.set(-0.88, 0, 0);
+      king.armR.shoulder.rotation.set(-0.42, -0.08, 0.26);
+      king.armR.elbow.rotation.set(-0.56, 0, 0);
       kingSmile = 0.35;
     } else if (beatIdx === 3) {
       // =====================================================================
       // BEAT 4 (15.2 .. 20.4s): TWIN GLASS WATER DISPLACEMENT TANKS
       // =====================================================================
       bathtubGroup.visible = false;
-      bathtubGroup.position.set(centerStagePos.x, 0, -0.65);
+      bathtubGroup.position.set(bathtubBasePos.x, 0, -0.65);
       pedestalGroup.visible = true;
       pedestalGroup.position.copy(centerStagePos);
 
@@ -1549,123 +1621,137 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
       crownMesh.visible = true;
       goldBarMesh.visible = true;
 
-      // Dunking gold bar (left tank x = -0.15) and bulkier silver-mixed crown (right tank x = +0.15)
+      // Dunking gold bar (left tank x = -0.175) and bulkier crown (right tank x = +0.175)
       const dunkU = smoothstep(15.6, 16.4, time);
-      goldBarMesh.position.set(-0.15, lerp(tableTopY + 0.42, tableTopY + 0.10, dunkU), 0.02);
+      goldBarMesh.position.set(-0.175, lerp(tableTopY + 0.44, tableTopY + 0.08, dunkU), 0.02);
       goldBarMesh.rotation.set(0, time * 0.6, 0);
 
-      crownMesh.position.set(0.15, lerp(tableTopY + 0.44, tableTopY + 0.08, dunkU), 0.02);
+      crownMesh.position.set(0.175, lerp(tableTopY + 0.44, tableTopY + 0.06, dunkU), 0.02);
       crownMesh.rotation.set(0, -time * 0.6, 0);
 
       // Left tank rises modestly; Right (Crown) tank rises MUCH higher (ΔV_crown > ΔV_gold)!
       const leftH = lerp(0.85, 1.08, dunkU);
-      const rightH = lerp(0.85, 1.68, dunkU);
+      const rightH = lerp(0.85, 1.72, dunkU);
       tankWaterLeft.scale.set(1, leftH, 1);
-      tankWaterLeft.position.set(-0.15, 0.10 * leftH, 0.02);
+      tankWaterLeft.position.set(-0.175, 0.012 + 0.10 * leftH, 0.02);
 
       tankWaterRight.scale.set(1, rightH, 1);
-      tankWaterRight.position.set(0.15, 0.10 * rightH, 0.02);
+      tankWaterRight.position.set(0.175, 0.012 + 0.10 * rightH, 0.02);
 
-      // Archimedes points excitedly at the overflowing right tank
-      archimedes.root.rotation.y = 0.32;
-      archimedes.chestGroup.rotation.x = 0.08 + breathe;
+      // Archimedes gestures excitedly ABOVE and LEFT of the tanks (zero tank/water overlap!)
+      archimedes.root.rotation.y = 0.24;
+      archimedes.chestGroup.rotation.x = 0.06 + breathe;
       archimedes.headGroup.rotation.y = 0.18;
-      archimedes.armR.shoulder.rotation.set(-1.12 + Math.sin(time * 6.0) * 0.08, 0.26, 0.25);
-      archimedes.armR.elbow.rotation.set(-0.35, 0, 0);
-      archimedes.armL.shoulder.rotation.set(-0.45, 0, -0.28);
-      archimedes.armL.elbow.rotation.set(-0.82, 0, 0);
+      archimedes.armR.shoulder.rotation.set(-1.84 + Math.sin(time * 6.0) * 0.06, -0.26, -0.08);
+      archimedes.armR.elbow.rotation.set(-0.62, 0, 0);
+      archimedes.armL.shoulder.rotation.set(-0.22, 0, -0.26);
+      archimedes.armL.elbow.rotation.set(-0.52, 0, 0);
       archSmile = 0.72;
 
-      // King Hiero leans in and gasps at the higher water level
-      king.chestGroup.rotation.x = 0.10 + breathe;
+      // King Hiero gasps with hand tucked cleanly over his own upper chest (zero tank overlap!)
+      king.chestGroup.rotation.x = 0.06 + breathe;
       king.headGroup.rotation.y = -0.24;
       king.eyeL.brow.position.y += 0.022;
-      king.armL.shoulder.rotation.set(-0.98, -0.22, 0.32);
-      king.armL.elbow.rotation.set(-0.55, 0, 0);
-      king.armR.shoulder.rotation.set(-0.48, 0, -0.30);
-      king.armR.elbow.rotation.set(-0.88, 0, 0);
+      king.armL.shoulder.rotation.set(-1.16, 0.44, 0.04);
+      king.armL.elbow.rotation.set(-1.18, 0, 0);
+      king.armR.shoulder.rotation.set(-0.22, 0, 0.26);
+      king.armR.elbow.rotation.set(-0.56, 0, 0);
       kingSmile = -0.20;
     } else if (beatIdx === 4) {
       // =====================================================================
       // BEAT 5 (20.4 .. 25.4s): BUSTED BY BUOYANCY (Hydro-Balance + Silver Core)
       // =====================================================================
       bathtubGroup.visible = false;
-      bathtubGroup.position.set(centerStagePos.x, 0, -0.65);
+      bathtubGroup.position.set(bathtubBasePos.x, 0, -0.65);
       pedestalGroup.visible = true;
       pedestalGroup.position.copy(centerStagePos);
 
       balanceGroup.visible = true;
       crownMesh.visible = true;
-      silverCoreMesh.visible = true; // expose sneaky silver core inside the crown!
+      silverCoreMesh.visible = true;
       goldBarMesh.visible = true;
 
-      // Balance beam tilts hard at sfx_11 (20.85s) exposing the lighter buoyant crown!
+      // Balance beam tilts hard at sfx_11 (20.85s); articulated pans stay upright!
       const tiltU = smoothstep(20.6, 21.15, time);
       const tiltAngle = tiltU * 0.34 + Math.sin(time * 7.0) * 0.025 * tiltU;
       balanceBeamMesh.rotation.z = tiltAngle;
 
-      goldBarMesh.position.set(-0.18, tableTopY + 0.24 - Math.sin(tiltAngle) * 0.18, -0.02);
-      crownMesh.position.set(0.18, tableTopY + 0.24 + Math.sin(tiltAngle) * 0.18, -0.02);
-      crownMesh.rotation.set(0.18, time * 1.4, 0);
+      const armSpan = 0.20;
+      const leftHookX = -armSpan * Math.cos(tiltAngle);
+      const leftHookY = 0.52 - armSpan * Math.sin(tiltAngle);
+      const rightHookX = armSpan * Math.cos(tiltAngle);
+      const rightHookY = 0.52 + armSpan * Math.sin(tiltAngle);
 
-      // Show miniature floating Greek ship starting at 23.2s ("Upward buoyant push...")
+      leftPanMesh.position.set(leftHookX, leftHookY, 0);
+      rightPanMesh.position.set(rightHookX, rightHookY, 0);
+
+      // Gold bar rests cleanly on left pan dish; Crown rests cleanly on right pan dish
+      goldBarMesh.position.set(leftHookX, tableTopY + leftHookY - 0.212, -0.07);
+      goldBarMesh.rotation.set(0, 0.15, 0);
+      crownMesh.position.set(rightHookX, tableTopY + rightHookY - 0.242, -0.07);
+      crownMesh.rotation.set(0, time * 1.4, 0);
+
+      // Show contained floating Greek ship in front of balance stand starting at 23.2s
       if (time >= 23.2) {
-        shipMesh.visible = true;
-        shipMesh.position.set(0, tableTopY + 0.14 + Math.sin(time * 4.5) * 0.015, 0.14);
-        shipMesh.rotation.set(0, 0.18, Math.sin(time * 3.8) * 0.08);
+        shipTankGroup.visible = true;
+        shipTankGroup.scale.setScalar(0.72);
+        shipTankGroup.position.set(0, tableTopY, 0.13);
+        shipMesh.position.set(0, 0.112 + Math.sin(time * 4.5) * 0.010, 0);
+        shipMesh.rotation.set(0, 0.12, Math.sin(time * 3.8) * 0.06);
       }
 
-      // King Hiero shakes royal fist ("Busted! The sneaky goldsmith stuffed silver inside!")
-      const fistShake = Math.sin(time * 12.0) * 0.14;
-      king.chestGroup.rotation.x = 0.06 + breathe;
+      // King Hiero shakes royal fist safely outside & right of right pan/crown
+      const fistShake = Math.sin(time * 12.0) * 0.10;
+      king.chestGroup.rotation.x = 0.04 + breathe;
       king.headGroup.rotation.y = -0.18;
-      king.armL.shoulder.rotation.set(-1.35 + fistShake, -0.18, 0.36);
-      king.armL.elbow.rotation.set(-0.65, 0, 0);
-      king.armR.shoulder.rotation.set(-0.65, 0, -0.32);
-      king.armR.elbow.rotation.set(-0.92, 0, 0);
+      king.armL.shoulder.rotation.set(-1.76 + fistShake, 0.48, 0.18);
+      king.armL.elbow.rotation.set(-0.88, 0, 0);
+      king.armR.shoulder.rotation.set(-0.28, 0, 0.26);
+      king.armR.elbow.rotation.set(-0.62, 0, 0);
       kingSmile = -0.25;
 
-      // Archimedes presents the buoyancy proof proudly
+      // Archimedes presents the buoyancy proof clearly above & left of the balance pan
       archimedes.chestGroup.rotation.x = -0.04 + breathe;
       archimedes.headGroup.rotation.y = 0.16;
-      archimedes.armR.shoulder.rotation.set(-1.18, 0.22, 0.32);
-      archimedes.armR.elbow.rotation.set(-0.48, 0, 0);
-      archimedes.armL.shoulder.rotation.set(-0.52, 0, -0.34);
-      archimedes.armL.elbow.rotation.set(-0.78, 0, 0);
+      archimedes.armR.shoulder.rotation.set(-1.78, -0.28, -0.04);
+      archimedes.armR.elbow.rotation.set(-0.68, 0, 0);
+      archimedes.armL.shoulder.rotation.set(-0.26, 0, -0.26);
+      archimedes.armL.elbow.rotation.set(-0.56, 0, 0);
       archSmile = 0.78;
     } else {
       // =====================================================================
       // BEAT 6 (25.4 .. 30.0s): SYRACUSE FINALE (Floating Ship + Pure Crown + Confetti)
       // =====================================================================
       bathtubGroup.visible = false;
-      bathtubGroup.position.set(centerStagePos.x, 0, -0.65);
+      bathtubGroup.position.set(bathtubBasePos.x, 0, -0.65);
       pedestalGroup.visible = true;
       pedestalGroup.position.copy(centerStagePos);
 
-      // Miniature Greek Trireme ship floats on a cushion of turquoise water on the pedestal
-      twinTanksGroup.visible = true;
-      twinTankGlassMesh.visible = false;
-      tankWaterLeft.visible = false;
-      tankWaterRight.scale.set(2.2, 0.65, 1.4);
-      tankWaterRight.position.set(0.0, 0.065, 0.04);
+      // Ship floats inside contained clear glass wave tank on right side of pedestal
+      shipTankGroup.visible = true;
+      shipTankGroup.scale.setScalar(1.0);
+      shipTankGroup.position.set(0.11, tableTopY, 0.03);
+      shipMesh.position.set(0, 0.112 + Math.sin(time * 4.2) * 0.012, 0);
+      shipMesh.rotation.set(0, Math.sin(time * 1.5) * 0.16, Math.sin(time * 3.6) * 0.06);
 
-      shipMesh.visible = true;
-      shipMesh.position.set(0.0, tableTopY + 0.14 + Math.sin(time * 4.2) * 0.018, 0.06);
-      shipMesh.rotation.set(0, Math.sin(time * 1.5) * 0.22, Math.sin(time * 3.6) * 0.07);
-
+      // Pure gleaming crown displayed cleanly on bronze cushion on left side of pedestal
+      crownCushionMesh.visible = true;
       crownMesh.visible = true;
-      crownMesh.position.set(-0.18, tableTopY + 0.26 + Math.sin(time * 5.0) * 0.02, 0.04);
-      crownMesh.rotation.set(0, time * 1.8, 0);
+      crownMesh.position.set(-0.21, tableTopY + 0.038 + Math.sin(time * 5.0) * 0.010, 0.03);
+      crownMesh.rotation.set(0, time * 1.6, 0);
       goldBarMesh.visible = false;
 
-      // Golden celebratory confetti raining across Syracuse court!
+      // Golden celebratory confetti raining around outer flanks & top beam (keeping faces & slate text clear!)
       confettiInstanced.visible = true;
       const confElapsed = Math.max(0, time - 25.4);
       for (let i = 0; i < CONFETTI_COUNT; i++) {
         const fall = ((confElapsed * 0.55 + i * 0.17) % 1.8);
-        const cx = ((i * 37) % 100) / 50 - 1.0;
-        const cz = (((i * 23) % 100) / 100) * 0.8 - 0.2;
-        dummy.position.set(cx * 0.85, 2.25 - fall * 1.15, cz);
+        const side = i % 2 === 0 ? -1 : 1;
+        const lane = i % 4;
+        const cx = lane === 0 ? (((i * 19) % 44) / 100 - 0.22) : side * (0.78 + ((i * 13) % 24) / 100);
+        const cy = lane === 0 ? 2.68 - fall * 0.12 : 2.38 - fall * 1.05;
+        const cz = lane === 0 ? -0.45 : (((i * 23) % 60) / 100 - 0.20);
+        dummy.position.set(cx, cy, cz);
         dummy.rotation.set(time * 3.2 + i, time * 2.4 + i * 0.5, i);
         dummy.scale.setScalar(1.0);
         dummy.updateMatrix();
@@ -1673,29 +1759,23 @@ export function buildArchimedesScene(scene, registry = new MaterialRegistry(), t
       }
       confettiInstanced.instanceMatrix.needsUpdate = true;
 
-      // Archimedes & King Hiero celebrate together!
+      // Archimedes & King Hiero celebrate with high wide arms (clear of crown & tank!)
       const cheer = Math.sin(time * 7.5) * 0.10;
       archimedes.root.rotation.y = 0.22;
       archimedes.chestGroup.rotation.x = -0.06 + breathe;
-      archimedes.armR.shoulder.rotation.set(-1.95 + cheer, -0.15, 0.42);
+      archimedes.armR.shoulder.rotation.set(-2.12 + cheer, -0.10, 0.34);
       archimedes.armR.elbow.rotation.set(-0.32, 0, 0);
-      archimedes.armL.shoulder.rotation.set(-1.35 - cheer, 0.18, -0.38);
-      archimedes.armL.elbow.rotation.set(-0.48, 0, 0);
+      archimedes.armL.shoulder.rotation.set(-1.55 - cheer, 0.12, -0.36);
+      archimedes.armL.elbow.rotation.set(-0.45, 0, 0);
       archSmile = 0.94;
 
       king.root.rotation.y = -0.22;
       king.chestGroup.rotation.x = -0.05 + breathe;
-      king.armL.shoulder.rotation.set(-1.85 - cheer, 0.15, 0.40);
+      king.armL.shoulder.rotation.set(-2.05 - cheer, 0.10, -0.34);
       king.armL.elbow.rotation.set(-0.35, 0, 0);
-      king.armR.shoulder.rotation.set(-1.25 + cheer, -0.15, -0.36);
-      king.armR.elbow.rotation.set(-0.52, 0, 0);
+      king.armR.shoulder.rotation.set(-1.45 + cheer, -0.12, 0.34);
+      king.armR.elbow.rotation.set(-0.48, 0, 0);
       kingSmile = 0.88;
-    }
-
-    // Restore tank sub-mesh visibilities if not in Beat 6
-    if (beatIdx !== 5) {
-      twinTankGlassMesh.visible = true;
-      tankWaterLeft.visible = true;
     }
 
     // 3. Drive Lip-Sync on both Archimedes and King Hiero II
