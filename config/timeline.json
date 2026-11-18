@@ -1,0 +1,284 @@
+{
+  "title": "EUREKA! — ARCHIMEDES & THE FAKE GOLD CROWN",
+  "categoryBadge": "COMEDY PHYSICS • ARCHIMEDES",
+  "duration": 30.0,
+  "fps": 30,
+  "totalFrames": 900,
+  "resolution": {
+    "width": 1080,
+    "height": 1920
+  },
+  "audio": {
+    "sampleRate": 44100,
+    "channels": 2,
+    "masterPath": "audio/output/master_audio.wav",
+    "manifestPath": "audio/output/voice_manifest.json",
+    "srtPath": "output/subtitles.srt",
+    "loudnessLufs": -14.0,
+    "truePeakCeilingDbfs": -1.0
+  },
+  "speakers": {
+    "narrator": {
+      "label": "NARRATOR",
+      "voice": "am_puck",
+      "lang": "en-us",
+      "speed": 1.05,
+      "color": "#38BDF8",
+      "pan": 0.0
+    },
+    "archimedes": {
+      "label": "ARCHIMEDES",
+      "voice": "bm_george",
+      "lang": "en-gb",
+      "speed": 1.04,
+      "color": "#38BDF8",
+      "pan": -0.15
+    },
+    "king": {
+      "label": "KING HIERO",
+      "voice": "am_michael",
+      "lang": "en-us",
+      "speed": 1.04,
+      "color": "#38BDF8",
+      "pan": 0.16
+    }
+  },
+  "worldContract": {
+    "floorY": 0.0,
+    "archimedesPos": [-0.38, 0.0, 0.12],
+    "kingPos": [0.42, 0.0, 0.12],
+    "bathtubPos": [0.02, 0.0, 0.14],
+    "tablePos": [0.02, 0.0, 0.14],
+    "slatePos": [0.0, 1.98, -1.12]
+  },
+  "beats": [
+    {
+      "id": "beat_1_royal_crown_hook",
+      "chapter": "01 • THE ROYAL CROWN TEST",
+      "start": 0.0,
+      "end": 4.8,
+      "shot": "royal_crown_hook",
+      "summary": "King Hiero II hands Archimedes a glittering spiky gold crown and a solid gold bar—demanding proof it isn't fake without scratching it.",
+      "camera": {
+        "posStart": [0.02, 1.24, 4.36],
+        "posEnd": [0.0, 1.21, 4.26],
+        "lookStart": [0.0, 0.84, 0.0],
+        "lookEnd": [0.0, 0.82, 0.02],
+        "fovStart": 46.5,
+        "fovEnd": 45.8,
+        "rollStart": 0.0,
+        "rollEnd": 0.008,
+        "swayAmp": 0.65
+      }
+    },
+    {
+      "id": "beat_2_ruler_struggle",
+      "chapter": "02 • GEOMETRY FAILS",
+      "start": 4.8,
+      "end": 9.8,
+      "shot": "ruler_struggle",
+      "summary": "Archimedes tries measuring the spiky crown with calipers and rulers while V = ??? chalk equations tangle on the Syracuse slate.",
+      "camera": {
+        "posStart": [-0.06, 1.22, 4.28],
+        "posEnd": [-0.02, 1.19, 4.22],
+        "lookStart": [-0.04, 0.82, 0.02],
+        "lookEnd": [0.0, 0.83, 0.04],
+        "fovStart": 46.2,
+        "fovEnd": 45.6,
+        "rollStart": -0.010,
+        "rollEnd": 0.010,
+        "swayAmp": 0.68
+      }
+    },
+    {
+      "id": "beat_3_bathtub_eureka",
+      "chapter": "03 • EUREKA BATHTUB SPLASH",
+      "start": 9.8,
+      "end": 15.2,
+      "shot": "bathtub_eureka",
+      "summary": "Archimedes hops into a brim-full bronze bathtub—SPLASH! Displaced turquoise water pours into a beaker while a golden ducky pops up.",
+      "camera": {
+        "posStart": [0.04, 1.25, 4.38],
+        "posEnd": [0.0, 1.20, 4.26],
+        "lookStart": [0.02, 0.80, 0.06],
+        "lookEnd": [0.0, 0.82, 0.08],
+        "fovStart": 46.8,
+        "fovEnd": 45.8,
+        "rollStart": 0.014,
+        "rollEnd": -0.008,
+        "swayAmp": 0.72
+      }
+    },
+    {
+      "id": "beat_4_dual_tank_trap",
+      "chapter": "04 • DUAL TANK DENSITY TRAP",
+      "start": 15.2,
+      "end": 20.4,
+      "shot": "dual_tank_trap",
+      "summary": "Archimedes dunks equal-weight pure gold and the suspect crown into twin glass water tanks—the bulkier silver-mixed crown overflows way more water!",
+      "camera": {
+        "posStart": [0.0, 1.22, 4.30],
+        "posEnd": [0.04, 1.19, 4.24],
+        "lookStart": [0.0, 0.81, 0.04],
+        "lookEnd": [0.02, 0.80, 0.06],
+        "fovStart": 46.2,
+        "fovEnd": 45.6,
+        "rollStart": -0.008,
+        "rollEnd": 0.012,
+        "swayAmp": 0.60
+      }
+    },
+    {
+      "id": "beat_5_busted_buoyancy",
+      "chapter": "05 • BUSTED BY BUOYANCY",
+      "start": 20.4,
+      "end": 25.4,
+      "shot": "busted_buoyancy",
+      "summary": "The bronze hydro-balance tilts hard exposing the fake silver core as F_b = rho g V lights up and a model ship floats effortlessly.",
+      "camera": {
+        "posStart": [0.02, 1.23, 4.32],
+        "posEnd": [-0.02, 1.20, 4.26],
+        "lookStart": [0.0, 0.82, 0.02],
+        "lookEnd": [0.0, 0.83, 0.0],
+        "fovStart": 46.4,
+        "fovEnd": 45.8,
+        "rollStart": 0.010,
+        "rollEnd": 0.0,
+        "swayAmp": 0.56
+      }
+    },
+    {
+      "id": "beat_6_syracuse_finale",
+      "chapter": "06 • EUREKA FINALE",
+      "start": 25.4,
+      "end": 30.0,
+      "shot": "syracuse_finale",
+      "summary": "Under golden Syracuse sunlight, Archimedes raises the pure golden crown beside King Hiero as golden water sparkles and confetti fly.",
+      "camera": {
+        "posStart": [0.0, 1.21, 4.28],
+        "posEnd": [0.02, 1.24, 4.36],
+        "lookStart": [0.0, 0.82, 0.0],
+        "lookEnd": [0.0, 0.84, -0.02],
+        "fovStart": 46.0,
+        "fovEnd": 46.6,
+        "rollStart": 0.0,
+        "rollEnd": 0.0,
+        "swayAmp": 0.45
+      }
+    }
+  ],
+  "dialogue": [
+    {
+      "id": "line_01",
+      "beatId": "beat_1_royal_crown_hook",
+      "speaker": "king",
+      "start": 0.22,
+      "end": 2.45,
+      "text": "Archimedes! Is my crown pure gold—or fake?"
+    },
+    {
+      "id": "line_02",
+      "beatId": "beat_1_royal_crown_hook",
+      "speaker": "narrator",
+      "start": 2.60,
+      "end": 4.65,
+      "text": "One catch—melt the King's crown, and you're history!"
+    },
+    {
+      "id": "line_03",
+      "beatId": "beat_2_ruler_struggle",
+      "speaker": "archimedes",
+      "start": 4.95,
+      "end": 7.35,
+      "text": "A gold bar is easy—but how do you measure spiky curves?"
+    },
+    {
+      "id": "line_04",
+      "beatId": "beat_2_ruler_struggle",
+      "speaker": "narrator",
+      "start": 7.50,
+      "end": 9.65,
+      "text": "Rulers fail, calipers slip—and geometry gives up!"
+    },
+    {
+      "id": "line_05",
+      "beatId": "beat_3_bathtub_eureka",
+      "speaker": "narrator",
+      "start": 9.95,
+      "end": 12.45,
+      "text": "Then Archimedes hops into a brim-full bath—splash!"
+    },
+    {
+      "id": "line_06",
+      "beatId": "beat_3_bathtub_eureka",
+      "speaker": "archimedes",
+      "start": 12.60,
+      "end": 15.05,
+      "text": "Eureka! My body pushes out its exact volume of water!"
+    },
+    {
+      "id": "line_07",
+      "beatId": "beat_4_dual_tank_trap",
+      "speaker": "narrator",
+      "start": 15.35,
+      "end": 17.85,
+      "text": "Cheat with lighter silver—and the crown must be bulkier!"
+    },
+    {
+      "id": "line_08",
+      "beatId": "beat_4_dual_tank_trap",
+      "speaker": "archimedes",
+      "start": 18.00,
+      "end": 20.25,
+      "text": "Look! The crown spills way more water than pure gold!"
+    },
+    {
+      "id": "line_09",
+      "beatId": "beat_5_busted_buoyancy",
+      "speaker": "king",
+      "start": 20.55,
+      "end": 22.80,
+      "text": "Busted! The sneaky goldsmith stuffed silver inside!"
+    },
+    {
+      "id": "line_10",
+      "beatId": "beat_5_busted_buoyancy",
+      "speaker": "narrator",
+      "start": 22.95,
+      "end": 25.25,
+      "text": "Upward buoyant push equals the weight of displaced water!"
+    },
+    {
+      "id": "line_11",
+      "beatId": "beat_6_syracuse_finale",
+      "speaker": "narrator",
+      "start": 25.55,
+      "end": 27.65,
+      "text": "That one bath unlocked why giant steel ships float!"
+    },
+    {
+      "id": "line_12",
+      "beatId": "beat_6_syracuse_finale",
+      "speaker": "archimedes",
+      "start": 27.80,
+      "end": 29.75,
+      "text": "Never underestimate a genius—and a bubble bath!"
+    }
+  ],
+  "sfxEvents": [
+    { "id": "sfx_01", "time": 0.45, "type": "royal_horn", "gain": 0.66, "pan": 0.15, "shake": 0.25 },
+    { "id": "sfx_02", "time": 1.85, "type": "crown_gleam", "gain": 0.62, "pan": 0.05, "shake": 0.18 },
+    { "id": "sfx_03", "time": 3.40, "type": "vine_boom", "gain": 0.74, "pan": 0.0, "shake": 0.55 },
+    { "id": "sfx_04", "time": 5.60, "type": "caliper_boing", "gain": 0.68, "pan": -0.12, "shake": 0.38 },
+    { "id": "sfx_05", "time": 8.10, "type": "chalk_screech", "gain": 0.60, "pan": 0.0, "shake": 0.24 },
+    { "id": "sfx_06", "time": 10.35, "type": "eureka_splash", "gain": 0.82, "pan": 0.0, "shake": 0.68 },
+    { "id": "sfx_07", "time": 11.40, "type": "duck_squeak", "gain": 0.64, "pan": 0.12, "shake": 0.22 },
+    { "id": "sfx_08", "time": 12.75, "type": "eureka_chime", "gain": 0.74, "pan": -0.10, "shake": 0.42 },
+    { "id": "sfx_09", "time": 16.10, "type": "tank_dunk", "gain": 0.72, "pan": -0.08, "shake": 0.40 },
+    { "id": "sfx_10", "time": 18.25, "type": "water_overflow", "gain": 0.70, "pan": 0.14, "shake": 0.35 },
+    { "id": "sfx_11", "time": 20.85, "type": "anvil_slam", "gain": 0.78, "pan": 0.0, "shake": 0.62 },
+    { "id": "sfx_12", "time": 23.40, "type": "ship_horn_bell", "gain": 0.64, "pan": 0.10, "shake": 0.25 },
+    { "id": "sfx_13", "time": 26.20, "type": "fanfare_swell", "gain": 0.68, "pan": 0.0, "shake": 0.28 },
+    { "id": "sfx_14", "time": 28.45, "type": "crown_ding", "gain": 0.70, "pan": -0.05, "shake": 0.22 }
+  ]
+}
